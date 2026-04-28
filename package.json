@@ -1,0 +1,8 @@
+{
+  "name": "graca-site",
+  "version": "1.0.0",
+  "description": "GRACA - Guia de Proposito by Kellen Aquino",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  }
+}
