@@ -3,121 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GRAÇA — Guia de Propósito · Kellen Aquino</title>
+<title>GRACA - Guia de Proposito - Kellen Aquino</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--ouro:#b8962e;--ouro-claro:#d4af5a;--ouro-palido:#e8d5a0;--preto:#0a0806;--preto-meio:#141210;--preto-card:#1a1714;--borda:rgba(184,150,46,0.25);--borda-hover:rgba(184,150,46,0.55);--texto:#c8b88a;--texto-claro:#e0d0a8;--texto-suave:rgba(200,184,138,0.55);}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--preto);color:var(--texto);font-family:'Montserrat',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
-  #tela-login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--preto);transition:opacity .6s ease;}
-  #tela-login.oculto{opacity:0;pointer-events:none;}
-  .login-box{width:min(420px,92vw);border:1px solid var(--borda);padding:3.5rem 2.8rem;text-align:center;position:relative;background:var(--preto-card);}
-  .login-box::before,.login-box::after{content:'';position:absolute;width:18px;height:18px;border-color:var(--ouro);border-style:solid;}
-  .login-box::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
-  .login-box::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
-  .ornamento{color:var(--ouro);font-size:10px;letter-spacing:12px;margin-bottom:1.4rem;opacity:.7;}
-  .logo-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,3.8rem);font-weight:300;color:var(--ouro-claro);letter-spacing:.25em;margin-bottom:.3rem;}
-  .logo-sub{font-size:10px;letter-spacing:.3em;color:var(--texto-suave);text-transform:uppercase;margin-bottom:2.4rem;}
-  .divisor{width:40px;height:1px;background:var(--ouro);opacity:.4;margin:0 auto 2.4rem;}
-  .login-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--texto-suave);margin-bottom:1rem;display:block;}
-  #input-codigo{width:100%;background:transparent;border:none;border-bottom:1px solid var(--borda);padding:.7rem 0;color:var(--ouro-claro);font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.4em;text-align:center;outline:none;transition:border-color .3s;margin-bottom:1.8rem;}
-  #input-codigo:focus{border-color:var(--ouro);}
-  #input-codigo::placeholder{color:var(--texto-suave);letter-spacing:.5em;font-size:11px;}
-  #btn-entrar{width:100%;background:transparent;border:1px solid var(--borda);color:var(--ouro-claro);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;padding:1rem;cursor:pointer;transition:all .3s;}
-  #btn-entrar:hover{background:rgba(184,150,46,.08);border-color:var(--ouro);}
-  #erro-msg{color:#c0826a;font-size:11px;letter-spacing:.1em;margin-top:1rem;min-height:16px;}
-  .login-rodape{margin-top:2.5rem;font-size:9px;letter-spacing:.2em;color:var(--texto-suave);}
-  #app{display:none;flex-direction:column;height:100vh;position:relative;z-index:1;}
-  #app.ativo{display:flex;}
-  .app-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--borda);flex-shrink:0;}
-  .header-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:var(--ouro-claro);letter-spacing:.3em;}
-  .header-sub{font-size:8px;letter-spacing:.25em;color:var(--texto-suave);text-transform:uppercase;margin-left:.6rem;}
-  #btn-sair{background:transparent;border:1px solid var(--borda);color:var(--texto-suave);font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.25em;text-transform:uppercase;padding:.4rem .9rem;cursor:pointer;transition:all .3s;}
-  #btn-sair:hover{border-color:var(--borda-hover);color:var(--texto);}
-  #chat-area{flex:1;overflow-y:auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem;scroll-behavior:smooth;}
-  #chat-area::-webkit-scrollbar{width:2px;}
-  #chat-area::-webkit-scrollbar-thumb{background:var(--borda);}
-  .boas-vindas{text-align:center;padding:2rem 1rem 1.5rem;max-width:560px;margin:0 auto;animation:fadeUp .8s ease forwards;}
-  .bv-ornamento{color:var(--ouro);font-size:11px;letter-spacing:10px;margin-bottom:1.4rem;opacity:.6;}
-  .bv-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:300;color:var(--ouro-claro);margin-bottom:.8rem;line-height:1.4;}
-  .bv-texto{font-size:13px;color:var(--texto-suave);line-height:1.8;margin-bottom:2rem;}
-  .sugestoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;max-width:520px;margin:0 auto;}
-  .sugestao-btn{background:transparent;border:1px solid var(--borda);color:var(--texto);font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.05em;padding:.75rem 1rem;cursor:pointer;transition:all .3s;text-align:left;line-height:1.4;}
-  .sugestao-btn:hover{background:rgba(184,150,46,.07);border-color:var(--borda-hover);color:var(--ouro-palido);}
-  .mensagem{display:flex;gap:.9rem;max-width:700px;animation:fadeUp .4s ease forwards;}
-  .mensagem.usuario{margin-left:auto;flex-direction:row-reverse;}
-  .mensagem.ia{margin-right:auto;}
-  .msg-avatar{width:30px;height:30px;border:1px solid var(--borda);display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:.05em;color:var(--ouro);flex-shrink:0;font-family:'Cormorant Garamond',serif;font-weight:400;}
-  .msg-conteudo{max-width:calc(100% - 42px);}
-  .msg-texto{font-size:13.5px;line-height:1.85;color:var(--texto-claro);padding:1rem 1.2rem;}
-  .mensagem.usuario .msg-texto{background:rgba(184,150,46,.07);border:1px solid var(--borda);color:var(--ouro-palido);}
-  .mensagem.ia .msg-texto{background:var(--preto-card);border:1px solid rgba(184,150,46,.12);}
-  .digitando{display:flex;gap:5px;align-items:center;padding:1rem 1.2rem;}
-  .digitando span{width:5px;height:5px;background:var(--ouro);border-radius:50%;opacity:.4;animation:pulsar 1.2s ease-in-out infinite;}
-  .digitando span:nth-child(2){animation-delay:.2s;}
-  .digitando span:nth-child(3){animation-delay:.4s;}
-  .input-area{border-top:1px solid var(--borda);padding:1rem 1.5rem;display:flex;gap:.8rem;align-items:flex-end;flex-shrink:0;background:var(--preto-meio);}
-  #textarea-msg{flex:1;background:transparent;border:none;border-bottom:1px solid var(--borda);padding:.6rem 0;color:var(--texto-claro);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;resize:none;outline:none;line-height:1.6;transition:border-color .3s;min-height:36px;max-height:160px;}
-  #textarea-msg:focus{border-color:var(--ouro);}
-  #textarea-msg::placeholder{color:var(--texto-suave);font-size:12px;}
-  #btn-enviar{background:transparent;border:1px solid var(--borda);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;flex-shrink:0;color:var(--ouro);}
-  #btn-enviar:hover{background:rgba(184,150,46,.1);border-color:var(--ouro);}
-  #btn-enviar:disabled{opacity:.3;cursor:not-allowed;}
-  #btn-enviar svg{width:14px;height:14px;}
-  .input-rodape{text-align:center;font-size:8px;letter-spacing:.2em;color:var(--texto-suave);padding:.4rem;flex-shrink:0;}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pulsar{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
-  @media(max-width:480px){.login-box{padding:2.8rem 1.8rem;}.app-header{padding:1rem 1.2rem;}#chat-area{padding:1.5rem 1rem;}.input-area{padding:.8rem 1rem;}.sugestoes{grid-template-columns:1fr;}}
+:root{--ouro:#b8962e;--ouro-claro:#d4af5a;--ouro-palido:#e8d5a0;--preto:#0a0806;--preto-meio:#141210;--preto-card:#1a1714;--borda:rgba(184,150,46,0.25);--borda-hover:rgba(184,150,46,0.55);--texto:#c8b88a;--texto-claro:#e0d0a8;--texto-suave:rgba(200,184,138,0.55);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--preto);color:var(--texto);font-family:'Montserrat',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+#tela-login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--preto);}
+#tela-login.oculto{display:none;}
+.login-box{width:min(420px,92vw);border:1px solid var(--borda);padding:3.5rem 2.8rem;text-align:center;position:relative;background:var(--preto-card);}
+.login-box::before,.login-box::after{content:'';position:absolute;width:18px;height:18px;border-color:var(--ouro);border-style:solid;}
+.login-box::before{top:-1px;left:-1px;border-width:1px 0 0 1px;}
+.login-box::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0;}
+.ornamento{color:var(--ouro);font-size:10px;letter-spacing:12px;margin-bottom:1.4rem;opacity:.7;}
+.logo-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,3.8rem);font-weight:300;color:var(--ouro-claro);letter-spacing:.25em;margin-bottom:.3rem;}
+.logo-sub{font-size:10px;letter-spacing:.3em;color:var(--texto-suave);text-transform:uppercase;margin-bottom:2.4rem;}
+.divisor{width:40px;height:1px;background:var(--ouro);opacity:.4;margin:0 auto 2.4rem;}
+.login-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--texto-suave);margin-bottom:1rem;display:block;}
+#input-codigo{width:100%;background:transparent;border:none;border-bottom:1px solid var(--borda);padding:.7rem 0;color:var(--ouro-claro);font-family:'Montserrat',sans-serif;font-size:14px;letter-spacing:.4em;text-align:center;outline:none;transition:border-color .3s;margin-bottom:1.8rem;}
+#input-codigo:focus{border-color:var(--ouro);}
+#input-codigo::placeholder{color:var(--texto-suave);letter-spacing:.3em;font-size:11px;}
+#btn-entrar{width:100%;background:transparent;border:1px solid var(--borda);color:var(--ouro-claro);font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;padding:1rem;cursor:pointer;transition:all .3s;}
+#btn-entrar:hover{background:rgba(184,150,46,.08);border-color:var(--ouro);}
+#erro-msg{color:#c0826a;font-size:11px;letter-spacing:.1em;margin-top:1rem;min-height:16px;}
+.login-rodape{margin-top:2.5rem;font-size:9px;letter-spacing:.2em;color:var(--texto-suave);}
+#app{display:none;flex-direction:column;height:100vh;}
+#app.ativo{display:flex;}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--borda);flex-shrink:0;}
+.header-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:var(--ouro-claro);letter-spacing:.3em;}
+.header-sub{font-size:8px;letter-spacing:.25em;color:var(--texto-suave);text-transform:uppercase;margin-left:.6rem;}
+#btn-sair{background:transparent;border:1px solid var(--borda);color:var(--texto-suave);font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:.25em;text-transform:uppercase;padding:.4rem .9rem;cursor:pointer;}
+#chat-area{flex:1;overflow-y:auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem;}
+.boas-vindas{text-align:center;padding:2rem 1rem 1.5rem;max-width:560px;margin:0 auto;}
+.bv-ornamento{color:var(--ouro);font-size:11px;letter-spacing:10px;margin-bottom:1.4rem;opacity:.6;}
+.bv-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:300;color:var(--ouro-claro);margin-bottom:.8rem;line-height:1.4;}
+.bv-texto{font-size:13px;color:var(--texto-suave);line-height:1.8;margin-bottom:2rem;}
+.sugestoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;max-width:520px;margin:0 auto;}
+.sugestao-btn{background:transparent;border:1px solid var(--borda);color:var(--texto);font-family:'Montserrat',sans-serif;font-size:11px;padding:.75rem 1rem;cursor:pointer;transition:all .3s;text-align:left;line-height:1.4;}
+.sugestao-btn:hover{background:rgba(184,150,46,.07);border-color:var(--borda-hover);}
+.mensagem{display:flex;gap:.9rem;max-width:700px;}
+.mensagem.usuario{margin-left:auto;flex-direction:row-reverse;}
+.mensagem.ia{margin-right:auto;}
+.msg-avatar{width:30px;height:30px;border:1px solid var(--borda);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ouro);flex-shrink:0;}
+.msg-conteudo{max-width:calc(100% - 42px);}
+.msg-texto{font-size:13.5px;line-height:1.85;color:var(--texto-claro);padding:1rem 1.2rem;}
+.mensagem.usuario .msg-texto{background:rgba(184,150,46,.07);border:1px solid var(--borda);color:var(--ouro-palido);}
+.mensagem.ia .msg-texto{background:var(--preto-card);border:1px solid rgba(184,150,46,.12);}
+.digitando{display:flex;gap:5px;align-items:center;padding:1rem 1.2rem;}
+.digitando span{width:5px;height:5px;background:var(--ouro);border-radius:50%;opacity:.4;animation:pulsar 1.2s ease-in-out infinite;}
+.digitando span:nth-child(2){animation-delay:.2s;}
+.digitando span:nth-child(3){animation-delay:.4s;}
+.input-area{border-top:1px solid var(--borda);padding:1rem 1.5rem;display:flex;gap:.8rem;align-items:flex-end;flex-shrink:0;background:var(--preto-meio);}
+#textarea-msg{flex:1;background:transparent;border:none;border-bottom:1px solid var(--borda);padding:.6rem 0;color:var(--texto-claro);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;resize:none;outline:none;line-height:1.6;min-height:36px;max-height:160px;}
+#textarea-msg:focus{border-color:var(--ouro);}
+#textarea-msg::placeholder{color:var(--texto-suave);font-size:12px;}
+#btn-enviar{background:transparent;border:1px solid var(--borda);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--ouro);}
+#btn-enviar:disabled{opacity:.3;cursor:not-allowed;}
+#btn-enviar svg{width:14px;height:14px;}
+.input-rodape{text-align:center;font-size:8px;letter-spacing:.2em;color:var(--texto-suave);padding:.4rem;flex-shrink:0;}
+@keyframes pulsar{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+@media(max-width:480px){.login-box{padding:2.5rem 1.5rem;}.sugestoes{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <div id="tela-login">
   <div class="login-box">
-    <div class="ornamento">✦ &nbsp; ✦ &nbsp; ✦</div>
-    <div class="logo-titulo">GRAÇA</div>
-    <div class="logo-sub">guia de propósito &nbsp;·&nbsp; kellen aquino</div>
+    <div class="ornamento">+ &nbsp; + &nbsp; +</div>
+    <div class="logo-titulo">GRACA</div>
+    <div class="logo-sub">guia de proposito - kellen aquino</div>
     <div class="divisor"></div>
-    <span class="login-label">Digite seu código de acesso</span>
-    <input type="password" id="input-codigo" placeholder="· · · · · · · ·" autocomplete="off">
-    <button id="btn-entrar" onclick="verificarCodigo()">Entrar</button>
+    <span class="login-label">Digite seu codigo de acesso</span>
+    <input type="text" id="input-codigo" placeholder="codigo de acesso" autocomplete="off">
+    <button id="btn-entrar">ENTRAR</button>
     <div id="erro-msg"></div>
-    <div class="login-rodape">© Kellen Aquino — todos os direitos reservados</div>
+    <div class="login-rodape">Kellen Aquino - todos os direitos reservados</div>
   </div>
 </div>
 <div id="app">
   <header class="app-header">
     <div style="display:flex;align-items:baseline;gap:.5rem">
-      <span class="header-logo">GRAÇA</span>
-      <span class="header-sub">guia de propósito</span>
+      <span class="header-logo">GRACA</span>
+      <span class="header-sub">guia de proposito</span>
     </div>
-    <button id="btn-sair" onclick="sair()">Sair</button>
+    <button id="btn-sair">Sair</button>
   </header>
-  <div id="chat-area"></div>
+  <div id="chat-area">
+    <div class="boas-vindas" id="boas-vindas">
+      <div class="bv-ornamento">+ &nbsp; + &nbsp; +</div>
+      <h2 class="bv-titulo">Bem-vindo(a) ao seu espaco sagrado</h2>
+      <p class="bv-texto">Voce chegou ate aqui porque algo dentro de voce quer ser ouvido.<br>Talvez seja o passado que ainda pesa. Talvez seja um sonho que ficou esperando.<br>Este e um lugar para encontrar clareza, sem julgamento, sem pressa.</p>
+      <div class="sugestoes" id="sugestoes">
+        <button class="sugestao-btn" data-txt="Sinto que meu passado ainda me prende. Por onde comeco?">Meu passado ainda me prende</button>
+        <button class="sugestao-btn" data-txt="Quero descobrir qual e o meu proposito de vida.">Qual e o meu proposito?</button>
+        <button class="sugestao-btn" data-txt="Sinto que perdi minha identidade. Nao sei mais quem sou.">Perdi minha identidade</button>
+        <button class="sugestao-btn" data-txt="Tenho medo de dar o proximo passo. Como encontro coragem?">Preciso de coragem</button>
+        <button class="sugestao-btn" data-txt="Carreguei muita responsabilidade e esqueci de mim.">Esqueci de mim</button>
+        <button class="sugestao-btn" data-txt="Quero recomecar, mas nao sei por onde.">Quero recomecar</button>
+      </div>
+    </div>
+  </div>
   <div class="input-area">
-    <textarea id="textarea-msg" placeholder="Compartilhe o que está em seu coração..." rows="1" oninput="ajustarAltura(this)" onkeydown="teclaEnter(event)"></textarea>
-    <button id="btn-enviar" onclick="enviarMensagem()">
+    <textarea id="textarea-msg" placeholder="Compartilhe o que esta em seu coracao..." rows="1"></textarea>
+    <button id="btn-enviar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </button>
   </div>
-  <div class="input-rodape">✦ &nbsp; GRAÇA · Kellen Aquino &nbsp; ✦</div>
+  <div class="input-rodape">GRACA - Kellen Aquino</div>
 </div>
 <script>
-const CODIGOS_VALIDOS=['GRACA2024','KELLEN','PROPOSITO','GRACA'];
-let historico=[],aguardando=false;
-const SYSTEM_PROMPT='Você é GRAÇA, um guia de propósito criado por Kellen Aquino — ex-sargento do Exército, cristã, especialista em comportamento e posicionamento de vida. Seu propósito é acolher qualquer pessoa — homem ou mulher — que sente que algo do passado a prende e busca clareza, direção e propósito de vida. COMO VOCÊ FALA: Com profundidade, acolhimento e leveza. Use linguagem neutra e inclusiva. Seja poético(a) mas direto(a). Faça perguntas que tocam a raiz. Valorize a história única de cada pessoa. TEMAS CENTRAIS: 1. O PASSADO QUE PRENDE — traumas, arrependimentos, identidades que já não servem. 2. A LIBERTAÇÃO — reconhecer o que precisa ser soltado, perdoado, ressignificado. 3. O PROPÓSITO — descobrir o que pulsa de verdade. 4. A CORAGEM — dar o próximo passo mesmo com medo. SOBRE HOMENS: Homens também carregam passados pesados — cobranças de provedor, identidade perdida, fracassos calados. Acolha com firmeza e sem julgamento. Propósito não tem gênero. INSTRUÇÕES: Nunca dê listas. Fale como num diálogo verdadeiro. Cada resposta termina com UMA pergunta. Máximo 4 parágrafos. Quando alguém compartilhar dor: primeiro acolha, depois ilumine, por último convide.';
-document.getElementById('input-codigo').addEventListener('keydown',e=>{if(e.key==='Enter')verificarCodigo();});
-function verificarCodigo(){const val=document.getElementById('input-codigo').value.trim().toUpperCase();const erro=document.getElementById('erro-msg');if(CODIGOS_VALIDOS.includes(val)){document.getElementById('tela-login').classList.add('oculto');setTimeout(()=>{document.getElementById('app').classList.add('ativo');iniciarChat();},500);erro.textContent='';}else{erro.textContent='Código inválido. Tente novamente.';document.getElementById('input-codigo').value='';document.getElementById('input-codigo').focus();}}
-function sair(){document.getElementById('app').classList.remove('ativo');document.getElementById('tela-login').classList.remove('oculto');document.getElementById('input-codigo').value='';historico=[];document.getElementById('chat-area').innerHTML='';}
-function iniciarChat(){const area=document.getElementById('chat-area');area.innerHTML='';const bv=document.createElement('div');bv.className='boas-vindas';bv.innerHTML='<div class="bv-ornamento">✦ &nbsp; ✦ &nbsp; ✦</div><h2 class="bv-titulo">Bem-vindo(a) ao seu espaço sagrado</h2><p class="bv-texto">Você chegou até aqui porque algo dentro de você quer ser ouvido.<br>Talvez seja o passado que ainda pesa. Talvez seja um sonho que ficou esperando.<br>Este é um lugar para encontrar clareza — sem julgamento, sem pressa.</p><div class="sugestoes"><button class="sugestao-btn" onclick="enviarSugestao('Sinto que meu passado ainda me prende. Por onde começo?')">Meu passado ainda me prende</button><button class="sugestao-btn" onclick="enviarSugestao('Quero descobrir qual é o meu propósito de vida.')">Qual é o meu propósito?</button><button class="sugestao-btn" onclick="enviarSugestao('Sinto que perdi minha identidade. Não sei mais quem sou.')">Perdi minha identidade</button><button class="sugestao-btn" onclick="enviarSugestao('Tenho medo de dar o próximo passo. Como encontro coragem?')">Preciso de coragem</button><button class="sugestao-btn" onclick="enviarSugestao('Carreguei muita responsabilidade e esqueci de mim mesmo.')">Esqueci de mim</button><button class="sugestao-btn" onclick="enviarSugestao('Quero recomeçar, mas não sei por onde.')">Quero recomeçar</button></div>';area.appendChild(bv);}
-function ajustarAltura(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px';}
-function teclaEnter(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();enviarMensagem();}}
-function enviarSugestao(txt){document.getElementById('textarea-msg').value=txt;enviarMensagem();}
-async function enviarMensagem(){if(aguardando)return;const ta=document.getElementById('textarea-msg');const texto=ta.value.trim();if(!texto)return;const bv=document.querySelector('.boas-vindas');if(bv)bv.remove();ta.value='';ta.style.height='auto';adicionarMensagem('usuario',texto);historico.push({role:'user',content:texto});aguardando=true;document.getElementById('btn-enviar').disabled=true;const digId=mostrarDigitando();try{const res=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensagens:historico,system:SYSTEM_PROMPT})});const dados=await res.json();removerDigitando(digId);if(dados.resposta){adicionarMensagem('ia',dados.resposta);historico.push({role:'assistant',content:dados.resposta});}else{adicionarMensagem('ia','Houve um momento de silêncio inesperado. Pode tentar novamente?');}}catch(err){removerDigitando(digId);adicionarMensagem('ia','Parece que nossa conexão foi interrompida. Por favor, tente novamente.');}aguardando=false;document.getElementById('btn-enviar').disabled=false;ta.focus();}
-function adicionarMensagem(tipo,texto){const area=document.getElementById('chat-area');const div=document.createElement('div');div.className='mensagem '+tipo;div.innerHTML='<div class="msg-avatar">'+(tipo==='usuario'?'EU':'G')+'</div><div class="msg-conteudo"><div class="msg-texto">'+formatarTexto(texto)+'</div></div>';area.appendChild(div);area.scrollTop=area.scrollHeight;}
-function formatarTexto(t){return t.replace(/**(.*?)**/g,'<strong>$1</strong>').replace(/*(.*?)*/g,'<em>$1</em>').replace(/
-/g,'<br>');}
-function mostrarDigitando(){const area=document.getElementById('chat-area');const div=document.createElement('div');const id='dig-'+Date.now();div.id=id;div.className='mensagem ia';div.innerHTML='<div class="msg-avatar">G</div><div class="msg-conteudo"><div class="msg-texto digitando"><span></span><span></span><span></span></div></div>';area.appendChild(div);area.scrollTop=area.scrollHeight;return id;}
-function removerDigitando(id){const el=document.getElementById(id);if(el)el.remove();}
+(function() {
+  var CODIGOS = ['GRACA2024', 'KELLEN', 'PROPOSITO', 'GRACA'];
+  var historico = [];
+  var aguardando = false;
+  var PROMPT = 'Voce e GRACA, guia de proposito da Kellen Aquino, ex-sargento, crista. Acolha homens e mulheres que buscam proposito e querem se libertar do passado. Fale com profundidade e acolhimento. Linguagem inclusiva. Faca perguntas profundas. Temas: passado que prende, libertacao, proposito, coragem. Nunca use listas. Dialogo verdadeiro. Termine com uma pergunta. Maximo 4 paragrafos.';
+  document.getElementById('btn-entrar').addEventListener('click', function() {
+    var val = document.getElementById('input-codigo').value.trim().toUpperCase();
+    if (CODIGOS.indexOf(val) !== -1) {
+      document.getElementById('tela-login').classList.add('oculto');
+      document.getElementById('app').classList.add('ativo');
+      document.getElementById('erro-msg').textContent = '';
+    } else {
+      document.getElementById('erro-msg').textContent = 'Codigo invalido. Tente: GRACA2024';
+      document.getElementById('input-codigo').value = '';
+    }
+  });
+  document.getElementById('input-codigo').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btn-entrar').click();
+  });
+  document.getElementById('btn-sair').addEventListener('click', function() {
+    document.getElementById('app').classList.remove('ativo');
+    document.getElementById('tela-login').classList.remove('oculto');
+    document.getElementById('input-codigo').value = '';
+    historico = [];
+    document.getElementById('chat-area').innerHTML = '';
+  });
+  document.getElementById('sugestoes').addEventListener('click', function(e) {
+    var btn = e.target.closest('.sugestao-btn');
+    if (!btn) return;
+    document.getElementById('textarea-msg').value = btn.getAttribute('data-txt');
+    document.getElementById('btn-enviar').click();
+  });
+  var ta = document.getElementById('textarea-msg');
+  ta.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+  });
+  ta.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('btn-enviar').click(); }
+  });
+  document.getElementById('btn-enviar').addEventListener('click', function() {
+    if (aguardando) return;
+    var texto = ta.value.trim();
+    if (!texto) return;
+    var bv = document.getElementById('boas-vindas');
+    if (bv) bv.remove();
+    ta.value = ''; ta.style.height = 'auto';
+    addMsg('usuario', texto);
+    historico.push({role: 'user', content: texto});
+    aguardando = true;
+    document.getElementById('btn-enviar').disabled = true;
+    var digId = showDig();
+    fetch('/.netlify/functions/chat', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({mensagens: historico, system: PROMPT})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      removeDig(digId);
+      var resp = (d && d.resposta) ? d.resposta : 'Houve um silencio inesperado. Tente novamente.';
+      addMsg('ia', resp);
+      historico.push({role: 'assistant', content: resp});
+    })
+    .catch(function() { removeDig(digId); addMsg('ia', 'Conexao interrompida. Por favor, tente novamente.'); })
+    .finally(function() { aguardando = false; document.getElementById('btn-enviar').disabled = false; ta.focus(); });
+  });
+  function addMsg(tipo, texto) {
+    var area = document.getElementById('chat-area');
+    var div = document.createElement('div');
+    div.className = 'mensagem ' + tipo;
+    div.innerHTML = '<div class="msg-avatar">' + (tipo === 'usuario' ? 'EU' : 'G') + '</div><div class="msg-conteudo"><div class="msg-texto">' + texto.replace(/\n/g, '<br>') + '</div></div>';
+    area.appendChild(div); area.scrollTop = area.scrollHeight;
+  }
+  function showDig() {
+    var area = document.getElementById('chat-area');
+    var div = document.createElement('div');
+    var id = 'dig' + Date.now();
+    div.id = id; div.className = 'mensagem ia';
+    div.innerHTML = '<div class="msg-avatar">G</div><div class="msg-conteudo"><div class="msg-texto digitando"><span></span><span></span><span></span></div></div>';
+    area.appendChild(div); area.scrollTop = area.scrollHeight; return id;
+  }
+  function removeDig(id) { var el = document.getElementById(id); if (el) el.remove(); }
+})();
 </script>
 </body>
 </html>
