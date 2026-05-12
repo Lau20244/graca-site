@@ -76,8 +76,8 @@ body{background:var(--preto);color:var(--texto);font-family:'Montserrat',sans-se
     <div class="logo-sub">guia de proposito - kellen aquino</div>
     <div class="divisor"></div>
     <span class="login-label">Digite seu codigo de acesso</span>
-    <input type="text" id="input-codigo" placeholder="codigo de acesso" autocomplete="off">
-    <button id="btn-entrar">ENTRAR</button>
+    <input type="text" id="input-codigo" placeholder="codigo de acesso" autocomplete="off" onkeydown="if(event.key==='Enter')entrar()">
+    <button id="btn-entrar" onclick="entrar()">ENTRAR</button>
     <div id="erro-msg"></div>
     <div class="login-rodape">Kellen Aquino - todos os direitos reservados</div>
   </div>
@@ -88,102 +88,99 @@ body{background:var(--preto);color:var(--texto);font-family:'Montserrat',sans-se
       <span class="header-logo">GRACA</span>
       <span class="header-sub">guia de proposito</span>
     </div>
-    <button id="btn-sair">Sair</button>
+    <button id="btn-sair" onclick="sair()">Sair</button>
   </header>
   <div id="chat-area">
     <div class="boas-vindas" id="boas-vindas">
       <div class="bv-ornamento">+ &nbsp; + &nbsp; +</div>
       <h2 class="bv-titulo">Bem-vindo(a) ao seu espaco sagrado</h2>
       <p class="bv-texto">Voce chegou ate aqui porque algo dentro de voce quer ser ouvido.<br>Talvez seja o passado que ainda pesa. Talvez seja um sonho que ficou esperando.<br>Este e um lugar para encontrar clareza, sem julgamento, sem pressa.</p>
-      <div class="sugestoes" id="sugestoes">
-        <button class="sugestao-btn" data-txt="Sinto que meu passado ainda me prende. Por onde comeco?">Meu passado ainda me prende</button>
-        <button class="sugestao-btn" data-txt="Quero descobrir qual e o meu proposito de vida.">Qual e o meu proposito?</button>
-        <button class="sugestao-btn" data-txt="Sinto que perdi minha identidade. Nao sei mais quem sou.">Perdi minha identidade</button>
-        <button class="sugestao-btn" data-txt="Tenho medo de dar o proximo passo. Como encontro coragem?">Preciso de coragem</button>
-        <button class="sugestao-btn" data-txt="Carreguei muita responsabilidade e esqueci de mim.">Esqueci de mim</button>
-        <button class="sugestao-btn" data-txt="Quero recomecar, mas nao sei por onde.">Quero recomecar</button>
+      <div class="sugestoes">
+        <button class="sugestao-btn" onclick="enviarSugestao('Sinto que meu passado ainda me prende. Por onde comeco?')">Meu passado ainda me prende</button>
+        <button class="sugestao-btn" onclick="enviarSugestao('Quero descobrir qual e o meu proposito de vida.')">Qual e o meu proposito?</button>
+        <button class="sugestao-btn" onclick="enviarSugestao('Sinto que perdi minha identidade. Nao sei mais quem sou.')">Perdi minha identidade</button>
+        <button class="sugestao-btn" onclick="enviarSugestao('Tenho medo de dar o proximo passo. Como encontro coragem?')">Preciso de coragem</button>
+        <button class="sugestao-btn" onclick="enviarSugestao('Carreguei muita responsabilidade e esqueci de mim.')">Esqueci de mim</button>
+        <button class="sugestao-btn" onclick="enviarSugestao('Quero recomecar, mas nao sei por onde.')">Quero recomecar</button>
       </div>
     </div>
   </div>
   <div class="input-area">
-    <textarea id="textarea-msg" placeholder="Compartilhe o que esta em seu coracao..." rows="1"></textarea>
-    <button id="btn-enviar">
+    <textarea id="textarea-msg" placeholder="Compartilhe o que esta em seu coracao..." rows="1" oninput="ajustarAltura(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar();}"></textarea>
+    <button id="btn-enviar" onclick="enviar()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
     </button>
   </div>
   <div class="input-rodape">GRACA - Kellen Aquino</div>
 </div>
 <script>
-(function(){
-  var CODIGOS=['GRACA2024','KELLEN','PROPOSITO','GRACA'];
-  var historico=[],aguardando=false;
-  var PROMPT='Voce e GRACA, guia de proposito da Kellen Aquino. REGRAS ABSOLUTAS: 1) NUNCA use expressoes como querida alma, meu bem, luz, coracao. 2) NUNCA use acoes entre asteriscos como *pausa* ou *respiro*. 3) Fale de forma direta, simples e humana. 4) No FINAL de cada resposta, voce DEVE escrever exatamente a tag ###OPCOES### seguida de 3 opcoes separadas por |. EXEMPLO de formato correto: Sua resposta aqui com ate 3 paragrafos.###OPCOES###Quero contar mais|Nao sei por onde comecar|O que devo fazer agora. TEMAS: passado que prende, libertacao, proposito, identidade, coragem. Maximo 3 paragrafos antes das opcoes.';
-
-  document.getElementById('btn-entrar').addEventListener('click',function(){
-    var val=document.getElementById('input-codigo').value.trim().toUpperCase();
-    if(CODIGOS.indexOf(val)!==-1){document.getElementById('tela-login').classList.add('oculto');document.getElementById('app').classList.add('ativo');document.getElementById('erro-msg').textContent='';}
-    else{document.getElementById('erro-msg').textContent='Codigo invalido. Tente: GRACA2024';document.getElementById('input-codigo').value='';}
-  });
-  document.getElementById('input-codigo').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('btn-entrar').click();});
-  document.getElementById('btn-sair').addEventListener('click',function(){document.getElementById('app').classList.remove('ativo');document.getElementById('tela-login').classList.remove('oculto');document.getElementById('input-codigo').value='';historico=[];document.getElementById('chat-area').innerHTML='';});
-  document.getElementById('sugestoes').addEventListener('click',function(e){var b=e.target.closest('.sugestao-btn');if(!b)return;document.getElementById('textarea-msg').value=b.getAttribute('data-txt');document.getElementById('btn-enviar').click();});
+var CODIGOS=['GRACA2024','KELLEN','PROPOSITO','GRACA'];
+var historico=[],aguardando=false;
+var PROMPT='Voce e GRACA, guia de proposito da Kellen Aquino. REGRAS: 1) NUNCA use expressoes como querida alma, meu bem, luz. 2) NUNCA use acoes entre asteriscos como *pausa*. 3) Fale de forma direta e humana. 4) OBRIGATORIO: No final escreva ###OPCOES### seguida de 3 opcoes separadas por |. Exemplo: Texto da resposta.###OPCOES###Quero contar mais|Nao sei por onde comecar|O que fazer agora. TEMAS: passado, libertacao, proposito, identidade, coragem. Maximo 3 paragrafos.';
+function entrar(){
+  var val=document.getElementById('input-codigo').value.trim().toUpperCase();
+  if(CODIGOS.indexOf(val)!==-1){document.getElementById('tela-login').classList.add('oculto');document.getElementById('app').classList.add('ativo');document.getElementById('erro-msg').textContent='';}
+  else{document.getElementById('erro-msg').textContent='Codigo invalido. Tente: GRACA2024';document.getElementById('input-codigo').value='';}
+}
+function sair(){
+  document.getElementById('app').classList.remove('ativo');
+  document.getElementById('tela-login').classList.remove('oculto');
+  document.getElementById('input-codigo').value='';
+  historico=[];document.getElementById('chat-area').innerHTML='';
+}
+function ajustarAltura(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px';}
+function enviarSugestao(txt){document.getElementById('textarea-msg').value=txt;enviar();}
+function enviar(){
+  if(aguardando)return;
   var ta=document.getElementById('textarea-msg');
-  ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px';});
-  ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('btn-enviar').click();}});
-  document.getElementById('btn-enviar').addEventListener('click',function(){
-    if(aguardando)return;
-    var texto=ta.value.trim();if(!texto)return;
-    var bv=document.getElementById('boas-vindas');if(bv)bv.remove();
-    document.querySelectorAll('.opcoes-rapidas').forEach(function(el){el.remove();});
-    ta.value='';ta.style.height='auto';
-    addMsg('usuario',texto);
-    historico.push({role:'user',content:texto});
-    aguardando=true;document.getElementById('btn-enviar').disabled=true;
-    var digId=showDig();
-    fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensagens:historico,system:PROMPT})})
-    .then(function(r){return r.json();})
-    .then(function(d){
-      removeDig(digId);
-      var resposta=(d&&d.resposta)?d.resposta:'Houve um silencio inesperado. Tente novamente.';
-      var idx=resposta.indexOf('###OPCOES###');
-      var textoResp=idx!==-1?resposta.substring(0,idx).trim():resposta.trim();
-      var opcoes=[];
-      if(idx!==-1){opcoes=resposta.substring(idx+12).trim().split('|').map(function(o){return o.trim();}).filter(function(o){return o.length>0;});}
-      addMsg('ia',textoResp);
-      historico.push({role:'assistant',content:textoResp});
-      if(opcoes.length>0)addOpcoes(opcoes);
-    })
-    .catch(function(){removeDig(digId);addMsg('ia','Conexao interrompida. Por favor, tente novamente.');})
-    .finally(function(){aguardando=false;document.getElementById('btn-enviar').disabled=false;ta.focus();});
+  var texto=ta.value.trim();if(!texto)return;
+  var bv=document.getElementById('boas-vindas');if(bv)bv.remove();
+  document.querySelectorAll('.opcoes-rapidas').forEach(function(el){el.remove();});
+  ta.value='';ta.style.height='auto';
+  addMsg('usuario',texto);
+  historico.push({role:'user',content:texto});
+  aguardando=true;document.getElementById('btn-enviar').disabled=true;
+  var digId=showDig();
+  fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensagens:historico,system:PROMPT})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    removeDig(digId);
+    var resposta=(d&&d.resposta)?d.resposta:'Houve um silencio inesperado. Tente novamente.';
+    var idx=resposta.indexOf('###OPCOES###');
+    var textoResp=idx!==-1?resposta.substring(0,idx).trim():resposta.trim();
+    var opcoes=idx!==-1?resposta.substring(idx+12).trim().split('|').map(function(o){return o.trim();}).filter(function(o){return o.length>0;}):[]; 
+    addMsg('ia',textoResp);
+    historico.push({role:'assistant',content:textoResp});
+    if(opcoes.length>0)addOpcoes(opcoes);
+  })
+  .catch(function(){removeDig(digId);addMsg('ia','Conexao interrompida. Por favor, tente novamente.');})
+  .finally(function(){aguardando=false;document.getElementById('btn-enviar').disabled=false;ta.focus();});
+}
+function limpar(t){return t.replace(/\*[^*]*\*/g,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>').trim();}
+function addMsg(tipo,texto){
+  var area=document.getElementById('chat-area');
+  var div=document.createElement('div');div.className='mensagem '+tipo;
+  div.innerHTML='<div class="msg-avatar">'+(tipo==='usuario'?'EU':'G')+'</div><div class="msg-conteudo"><div class="msg-texto">'+limpar(texto)+'</div></div>';
+  area.appendChild(div);area.scrollTop=area.scrollHeight;
+}
+function addOpcoes(opcoes){
+  var area=document.getElementById('chat-area');
+  var div=document.createElement('div');div.className='opcoes-rapidas';
+  opcoes.forEach(function(op){
+    var btn=document.createElement('button');btn.className='opcao-btn';btn.textContent=op;
+    btn.onclick=function(){document.getElementById('textarea-msg').value=op;enviar();};
+    div.appendChild(btn);
   });
-  function limparTexto(t){
-    return t.replace(/*[^*]**/g,'').replace(/**([^*]+)**/g,'<strong>$1</strong>').replace(/
-/g,'<br>').trim();
-  }
-  function addMsg(tipo,texto){
-    var area=document.getElementById('chat-area');
-    var div=document.createElement('div');div.className='mensagem '+tipo;
-    div.innerHTML='<div class="msg-avatar">'+(tipo==='usuario'?'EU':'G')+'</div><div class="msg-conteudo"><div class="msg-texto">'+limparTexto(texto)+'</div></div>';
-    area.appendChild(div);area.scrollTop=area.scrollHeight;
-  }
-  function addOpcoes(opcoes){
-    var area=document.getElementById('chat-area');
-    var div=document.createElement('div');div.className='opcoes-rapidas';
-    opcoes.forEach(function(op){
-      var btn=document.createElement('button');btn.className='opcao-btn';btn.textContent=op;
-      btn.addEventListener('click',function(){document.getElementById('textarea-msg').value=op;document.getElementById('btn-enviar').click();});
-      div.appendChild(btn);
-    });
-    area.appendChild(div);area.scrollTop=area.scrollHeight;
-  }
-  function showDig(){
-    var area=document.getElementById('chat-area');var div=document.createElement('div');var id='dig'+Date.now();
-    div.id=id;div.className='mensagem ia';
-    div.innerHTML='<div class="msg-avatar">G</div><div class="msg-conteudo"><div class="msg-texto digitando"><span></span><span></span><span></span></div></div>';
-    area.appendChild(div);area.scrollTop=area.scrollHeight;return id;
-  }
-  function removeDig(id){var el=document.getElementById(id);if(el)el.remove();}
-})();
+  area.appendChild(div);area.scrollTop=area.scrollHeight;
+}
+function showDig(){
+  var area=document.getElementById('chat-area');
+  var div=document.createElement('div');var id='dig'+Date.now();
+  div.id=id;div.className='mensagem ia';
+  div.innerHTML='<div class="msg-avatar">G</div><div class="msg-conteudo"><div class="msg-texto digitando"><span></span><span></span><span></span></div></div>';
+  area.appendChild(div);area.scrollTop=area.scrollHeight;return id;
+}
+function removeDig(id){var el=document.getElementById(id);if(el)el.remove();}
 </script>
 </body>
 </html>
